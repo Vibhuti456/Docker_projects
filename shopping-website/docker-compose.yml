@@ -1,0 +1,34 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: shopping_cart
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - shopping-net
+
+  flask:
+    build: ./app
+    container_name: flask-container
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    networks:
+      - shopping-net
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: shopping_cart
+      MYSQL_USER: root
+      MYSQL_PASSWORD: rootpassword
+
+volumes:
+  mysql-data:
+
+networks:
+  shopping-net:
+
