@@ -1,13 +1,14 @@
+import os
 from flask import Flask, render_template, request, redirect
-from urllib.parse import quote as url_quote
 import mysql.connector
+from urllib.parse import quote as url_quote  # Import from urllib.parse
 
 app = Flask(__name__)
 
 # Function to get the MySQL connection
 def get_db_connection():
     conn = mysql.connector.connect(
-        host='mysql',  # Name of the MySQL container
+        host=os.getenv('MYSQL_HOST', 'db'),  # Updated to use 'db' as default MySQL host
         user='root',  # MySQL root user
         password='rootpass',  # MySQL root password
         database='todo'  # Database name
@@ -16,8 +17,18 @@ def get_db_connection():
 
 # Initialize database
 def init_db():
-    conn = get_db_connection()
+    conn = mysql.connector.connect(
+        host=os.getenv('MYSQL_HOST', 'db'),  # Updated to use 'db' as default MySQL host
+        user='root',
+        password='rootpass'
+    )
     cursor = conn.cursor()
+
+    # Create the `todo` database if it doesn't exist
+    cursor.execute("CREATE DATABASE IF NOT EXISTS todo")
+    cursor.execute("USE todo")
+
+    # Create the `tasks` table if it doesn't exist
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS tasks (
         id INT AUTO_INCREMENT PRIMARY KEY,
