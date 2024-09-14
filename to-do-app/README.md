@@ -37,7 +37,7 @@ How to check the list of network
 Run SQL Container with volume and network 
 
 ```bash 
-  docker run --name db --network todo-network -e MYSQL_ROOT_PASSWORD=password -v mysql-data:/var/lib/mysql -d mysql:5.7
+  docker run --name mysql -e MYSQL_ROOT_PASSWORD=rootpass
 ```
 How to check running and stopping Container 
 
@@ -53,7 +53,7 @@ Build a Image
 How to run the flask container 
 
 ```bash
-  docker run --name flask-app --network shopping_network -p 5000:5000 -d to-do-app
+  docker run -d --name flask-app --link mysql:db -p 5000:5000 to-do-app
 ```
 
 How to inspect network to check container info 
@@ -65,7 +65,8 @@ How to inspect network to check container info
 How to open SQL container 
 
 ```bash 
-  docker exec -it mysql-db mysql -u root -p
+  docker exec -it mysql bash
+  mysql -u root -p
 ```
 
 How to check logs in docker 
@@ -86,7 +87,8 @@ docker run --rm --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -d mysql --skip-g
 If Table doesn't exist 
 
 ```bash 
-  docker exec -it mysql mysql -u root -p 
+  docker exec -it mysql bash
+  mysql -u root -p 
 ```
 Give root password of your SQL container and we will get the access of SQL container
 
