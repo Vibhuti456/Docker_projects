@@ -37,7 +37,12 @@ How to check the list of network
 Run SQL Container with volume and network 
 
 ```bash 
-  docker run --name mysql -e MYSQL_ROOT_PASSWORD=rootpass
+  docker run -d \
+--name db \
+--network todo-network \
+-e MYSQL_ROOT_PASSWORD=rootpass \
+-e MYSQL_DATABASE=todo \
+mysql:5.7
 ```
 How to check running and stopping Container 
 
@@ -47,13 +52,18 @@ How to check running and stopping Container
 Build a Image
 
 ```bash 
-  docker build -t to-do-app .
+  docker build -t todo-app .
 ```
 
 How to run the flask container 
 
 ```bash
-  docker run -d --name flask-app --link mysql:db -p 5000:5000 to-do-app
+  docker run -d \
+--name flask-app \
+--network todo-network \
+-e MYSQL_HOST=db \
+-p 5000:5000 \
+todo-app
 ```
 
 How to inspect network to check container info 
@@ -62,6 +72,11 @@ How to inspect network to check container info
   docker network inspect todo_network
 ```
 
+How to check logs in docker 
+
+```bash 
+  docker logs <container-id>
+```
 How to open SQL container 
 
 ```bash 
@@ -69,47 +84,21 @@ How to open SQL container
   mysql -u root -p
 ```
 
-How to check logs in docker 
-
-```bash 
-  docker logs <container-id>
-```
-  
-
-### If any errors occurs SQL related to Password Access and flask container 
-
-SQL command 
-
-```bash 
-docker run --rm --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -d mysql --skip-grant-tables
-``` 
-
-If Table doesn't exist 
-
-```bash 
-  docker exec -it mysql bash
-  mysql -u root -p 
-```
 Give root password of your SQL container and we will get the access of SQL container
 
 #### Create the Database
 
 ```bash 
-  CREATE DATABASE todo
+  SHOW DATABASE todo
 ```
 #### Switched to new database 
 
 ```bash 
   USE todo
 ```
-
-#### Create a table inside it
+#### You wwill get the task table 
 
 ```bash
-  CREATE TABLE tasks (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    description VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+  SELECT * FROM tasks;
 ```
-
+Show the data inside the table. 
