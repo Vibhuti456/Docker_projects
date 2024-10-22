@@ -96,9 +96,52 @@ Give root password of your SQL container and we will get the access of SQL conta
 ```bash 
   USE todo
 ```
-#### You wwill get the task table 
+#### You will get the task table 
 
 ```bash
   SELECT * FROM tasks;
 ```
 Show the data inside the table. 
+
+#### Commands for docker compose file
+
+```bash
+  docker compose up -d
+```
+#### If you face any issue in docker compose up run follow these commands to resolve 
+
+```bash
+  docker-compose exec flask-app printenv | grep MYSQL_HOST
+```
+
+```bash
+  docker exec -it db netstat -tuln | grep 3306
+```
+
+#### Steps to Diagnose and Fix
+
+1. Check the Status of All Services: First, check the status of all services in your Docker Compose setup to see what's happening:
+
+```bash
+  docker-compose ps
+```
+
+Look for the flask-app service and see if it shows as "Exited" or "Up." If it has exited, you'll need to investigate why
+
+2. Check Logs for Flask Application: Inspect the logs for the Flask application to get more details about why it might not be running:
+
+```bash
+  docker-compose logs flask
+```
+3. Start Services Manually: If the flask-app is not running, try starting the services again:
+
+```bash
+  docker-compose up -d
+```
+
+4. Inspect Container Exit Codes: If flask-app has exited, you can inspect the exit code to determine why it stopped:
+
+```bash
+  docker inspect flask-app --format='{{.State.ExitCode}}'
+```
+An exit code of 0 typically indicates a successful shutdown, while any other value usually indicates an error.
