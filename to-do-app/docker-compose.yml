@@ -1,0 +1,33 @@
+version: '3'
+services: 
+  db: 
+    image: mysql:5.7
+    container_name: db
+    environment: 
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: todo
+    ports:
+      - "3306:3306" 
+    networks: 
+      - todo-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "--silent"]
+      interval: 10s
+      retries: 5
+
+
+  flask: 
+    build: .
+    container_name: flask-app
+    ports: 
+      - "5000:5000" 
+    depends_on:
+      - db 
+    networks: 
+      - todo-network
+    environment:
+      MYSQL_HOST: db
+
+networks: 
+  todo-network:
+    driver: bridge  
