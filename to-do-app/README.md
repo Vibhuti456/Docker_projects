@@ -144,4 +144,4 @@ Look for the flask-app service and see if it shows as "Exited" or "Up." If it ha
 ```bash
   docker inspect flask-app --format='{{.State.ExitCode}}'
 ```
-An exit code of 0 typically indicates a successful shutdown, while any other value usually indicates an error.
+An exit code of 0 typically indicates a successful shutdown.
